@@ -1,0 +1,16 @@
+# Ocultar credenciales
+.env
+
+# Ocultar las llaves maestras de la CA (¡IMPORTANTÍSIMO!)
+backend/ca/
+ca.key
+ca.crt
+*.srl
+
+# Ocultar certificados generados por los usuarios
+*.p12
+*.pem
+*.csr
+
+# Ocultar carpetas de dependencias (para cuando instalemos PHPMailer)
+vendor/

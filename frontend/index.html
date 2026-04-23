@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoridad Certificadora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- MODAL DE SOLICITUD -->
+    <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-box">
+            <button class="modal-close" id="btn-modal-close" aria-label="Cerrar">&times;</button>
+
+            <!-- Indicador de pasos -->
+            <div class="modal-stepper">
+                <div class="stepper-step active" id="ind-email">1</div>
+                <div class="stepper-line"></div>
+                <div class="stepper-step" id="ind-verify">2</div>
+                <div class="stepper-line"></div>
+                <div class="stepper-step" id="ind-generate">3</div>
+            </div>
+
+            <!-- PASO 1: Email -->
+            <div id="step-email" class="modal-step">
+                <h2 id="modal-title" class="modal-step-title">Solicitar Certificado</h2>
+                <p class="modal-step-desc">Introduce tu dirección de correo electrónico. Te enviaremos un código para verificar que eres el propietario.</p>
+                <label class="form-label" for="input-email">Correo electrónico</label>
+                <input id="input-email" class="form-input" type="email" placeholder="ejemplo@correo.com" autocomplete="email">
+                <p id="error-email" class="form-error hidden"></p>
+                <button id="btn-send-email" class="btn-cta modal-btn">Enviar código</button>
+            </div>
+
+            <!-- PASO 2: Verificar código -->
+            <div id="step-verify" class="modal-step hidden">
+                <h2 class="modal-step-title">Verifica tu email</h2>
+                <p class="modal-step-desc">Hemos enviado un código de 6 dígitos a <strong id="verify-email-display"></strong>. Introdúcelo a continuación.</p>
+                <label class="form-label" for="input-code">Código de verificación</label>
+                <input id="input-code" class="form-input form-input--code" type="text" placeholder="123456" maxlength="6" autocomplete="one-time-code">
+                <p id="error-code" class="form-error hidden"></p>
+                <button id="btn-verify-code" class="btn-cta modal-btn">Verificar</button>
+                <button id="btn-resend" class="btn-link">Reenviar código</button>
+            </div>
+
+            <!-- PASO 3: Generar y descargar -->
+            <div id="step-generate" class="modal-step hidden">
+                <h2 class="modal-step-title">Genera tu certificado</h2>
+                <p class="modal-step-desc">Email verificado: <strong id="generate-email-display"></strong>.<br>Las claves se generarán en tu navegador. Elige una contraseña para proteger el archivo .p12.</p>
+                <label class="form-label" for="input-p12-password">Contraseña del archivo .p12</label>
+                <input id="input-p12-password" class="form-input" type="password" placeholder="Mínimo 4 caracteres">
+                <label class="form-label" for="input-p12-confirm" style="margin-top:0.75rem;">Confirmar contraseña</label>
+                <input id="input-p12-confirm" class="form-input" type="password" placeholder="Repite la contraseña">
+                <p id="error-generate" class="form-error hidden"></p>
+                <p id="generate-info" class="form-info hidden"></p>
+                <button id="btn-generate" class="btn-cta modal-btn">Generar y Descargar</button>
+            </div>
+
+            <!-- PASO 4: Éxito -->
+            <div id="step-done" class="modal-step hidden">
+                <div class="done-icon">✓</div>
+                <h2 class="modal-step-title">¡Certificado descargado!</h2>
+                <div id="done-summary" class="done-summary"></div>
+                <button id="btn-restart" class="btn-cta modal-btn">Solicitar otro certificado</button>
+            </div>
+        </div>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="assets/logo-removebg-preview.png" alt="Logo" height="40">
+            <span>Autoridad Certificadora</span>
+        </div>
+        <nav>
+            <a href="#" class="open-modal">Solicitud de Certificado</a>
+            <a href="#">Validación</a>
+            <a href="#">Información</a>
+            <a href="#">Sobre Nosotros</a>
+            <a href="#">Contacto</a>
+        </nav>
+    </header>
+
+    <main class="hero-section">
+        <div class="hero-content">
+            <h1>Protege tu identidad digital</h1>
+            <p>Certificados seguros para verificar tu correo electronico</p>
+            <div class="hero-buttons">
+                <button class="btn-outline open-modal">Solicitar Certificado</button>
+                <button class="btn-white">Verificar Certificado</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="assets/hero-sobre-removebg-preview.png" alt="Protección de email">
+        </div>
+    </main>
+
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2>¿Cómo Funciona?</h2>
+            <div class="line"></div>
+        </div>
+        <p class="subtitle">Así de simple:</p>
+        
+        <div class="steps-container">
+            <div class="step-card">
+                <h3><span class="step-num">1.</span> Ingresa tu email</h3>
+                <img class="step-img" src="assets/paso1-removebg-preview.png" alt="Ingresa email">
+            </div>
+            <div class="step-card">
+                <h3><span class="step-num">2.</span> Recibe un código de verificacion</h3>
+                <img class="step-img" src="assets/paso2-removebg-preview.png" alt="Recibe código">
+            </div>
+            <div class="step-card">
+                <h3><span class="step-num">3.</span> Obtén tu certificado</h3>
+                <img class="step-img" src="assets/paso3-removebg-preview.png" alt="Obtén certificado">
+            </div>
+        </div>
+    </section>
+
+    <section class="advantages">
+        <div class="section-header">
+            <h2>Nuestras Ventajas</h2>
+            <div class="line"></div>
+        </div>
+        
+        <div class="cards-container">
+            <div class="advantage-card">
+                <div class="card-title">
+                    <img class="adv-icon" src="assets/icono-candado-removebg-preview.png" alt="Seguridad">
+                    <h3>Seguridad Criptografica</h3>
+                </div>
+                <div class="card-line"></div>
+                <p>Cifrado de extremo a extremo</p>
+            </div>
+            <div class="advantage-card">
+                <div class="card-title">
+                    <img class="adv-icon" src="assets/icono-id-removebg-preview.png" alt="Identidad">
+                    <h3>Identidad Verificada</h3>
+                </div>
+                <div class="card-line"></div>
+                <p>Confirma la propiedad de tu email</p>
+            </div>
+            <div class="advantage-card">
+                <div class="card-title">
+                    <img class="adv-icon" src="assets/icono-boli-removebg-preview.png" alt="Firmas">
+                    <h3>Firmas Digitales</h3>
+                </div>
+                <div class="card-line"></div>
+                <p>Ideal para firmar correos y documentos</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>Obtén tu certificado de email ahora</h2>
+        <button class="btn-cta open-modal">Solicitar Certificado Ahora</button>
+    </section>
+
+    <!-- TRUST BADGES -->
+    <section class="trust-section">
+        <div class="trust-badge">
+            <img src="assets/icono-candado-removebg-preview.png" alt="PKI Segura" class="trust-icon">
+            <span>PKI Segura</span>
+        </div>
+        <div class="trust-badge">
+            <img src="assets/icono-candado-removebg-preview.png" alt="HTTPS Cifrado" class="trust-icon">
+            <span>HTTPS Cifrado</span>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <span>© 2026 Autoridad Certificadora. Todos los derechos reservados.</span>
+        <div class="footer-links">
+            <a href="#">Política de Privaddad</a>
+            <a href="#">Política de Certificación</a>
+            <a href="#">Soporte</a>
+        </div>
+    </footer>
+
+    <!-- Librería forge para CSR y p12 -->
+    <script src="https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js"></script>
+    <script src="crypto.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Abrir/cerrar modal
+        document.querySelectorAll(".open-modal").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.getElementById("modal-overlay").classList.remove("hidden");
+                document.body.style.overflow = "hidden";
+            });
+        });
+        document.getElementById("btn-modal-close").addEventListener("click", closeModal);
+        document.getElementById("modal-overlay").addEventListener("click", e => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+        function closeModal() {
+            document.getElementById("modal-overlay").classList.add("hidden");
+            document.body.style.overflow = "";
+        }
+    </script>
+
+</body>
+</html>

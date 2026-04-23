@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Control - CA Local</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 40px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #333; border-bottom: 2px solid #0056b3; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #0056b3; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .verified { background: #d4edda; color: #155724; }
+        .pending { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Certificados Emitidos</h1>
+        <div id="certs-table">Cargando...</div>
+
+        <h1 style="margin-top: 50px;">Verificaciones en Curso</h1>
+        <div id="pending-table">Cargando...</div>
+    </div>
+
+    <script>
+        // Extraemos la clave de la URL: admin.html?key=tu_clave_secreta
+        const params = new URLSearchParams(window.location.search);
+        const key = params.get('key');
+
+        async function loadData() {
+            if(!key) {
+                document.body.innerHTML = "<h1>Acceso denegado. Se requiere clave API en la URL (?key=...)</h1>";
+                return;
+            }
+
+            // Cargar Certificados
+            const resCerts = await fetch(`../backend/admin-api.php?action=list_certs&key=${key}`);
+            const certs = await resCerts.json();
+            renderTable('certs-table', certs, ['ID', 'Email', 'Nº Serie', 'Fecha Emisión', 'Expira']);
+
+            // Cargar Pendientes
+            const resPend = await fetch(`../backend/admin-api.php?action=list_pending&key=${key}`);
+            const pending = await resPend.json();
+            renderTable('pending-table', pending, ['Email', 'Expira', 'Estado']);
+        }
+
+        function renderTable(divId, data, headers) {
+            if (data.error) {
+                document.getElementById(divId).innerHTML = `<p style="color:red">${data.error}</p>`;
+                return;
+            }
+            let html = '<table><thead><tr>';
+            headers.forEach(h => html += `<th>${h}</th>`);
+            html += '</tr></thead><tbody>';
+            
+            data.forEach(row => {
+                html += '<tr>';
+                Object.values(row).forEach(val => {
+                    if(val === true || val === false) {
+                        html += `<td><span class="badge ${val ? 'verified' : 'pending'}">${val ? 'Verificado' : 'Pendiente'}</span></td>`;
+                    } else {
+                        html += `<td>${val}</td>`;
+                    }
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            document.getElementById(divId).innerHTML = html;
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
