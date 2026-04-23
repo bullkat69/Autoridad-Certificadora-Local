@@ -1,6 +1,4 @@
-# ====================================================================
-# Configuración de OpenSSL para Autoridad Certificadora de S/MIME
-# ====================================================================
+
 
 [ req ]
 default_bits        = 2048
@@ -16,9 +14,8 @@ localityName                    = Locality Name (eg, city)
 commonName                      = Common Name (e.g. server FQDN or YOUR name)
 emailAddress                    = Email Address
 
-# ====================================================================
-# PERFIL DEL CERTIFICADO DE USUARIO (S/MIME)
-# ====================================================================
+
+
 # Cuando PHP firme el CSR, aplicará estas reglas obligatoriamente
 [ usr_cert ]
 basicConstraints = critical, CA:FALSE
