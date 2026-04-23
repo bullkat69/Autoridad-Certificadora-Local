@@ -113,9 +113,7 @@
 
 
 
-/* ==========================================
-   MODAL DE SOLICITUD
-   ========================================== */
+
 .modal-overlay {
     position: fixed; inset: 0; z-index: 1000;
     background: rgba(11, 31, 64, 0.6);
@@ -190,9 +188,7 @@
 .done-summary strong { color: var(--text-main); }
 .done-summary code { background: #f0f3f8; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85rem; }
 
-/* ==========================================
-   RESPONSIVE
-   ========================================== */
+
 /* Tablet (≤ 900px) */
 @media (max-width: 900px) {
     .hero-section {
